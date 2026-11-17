@@ -1,0 +1,24 @@
+# Competitor new-pages alerts: the only file you need to edit.
+# Everything under `input:` is passed to the Apify Actor "Sitemap Monitor" as-is.
+# All fields: https://apify.com/lindenbyte/sitemap-monitor-new-pages/input-schema
+
+input:
+  # Competitor domains (their sitemaps are found via robots.txt) or direct sitemap URLs (.xml, .xml.gz, .txt).
+  sites:
+    - https://techcrunch.com/news-sitemap.xml
+    - https://www.theverge.com/sitemaps/google_news
+  # Monitor name. Your list of already-seen URLs is stored under this name in YOUR Apify account
+  # (key-value store "sitemap-monitor-state"). Keep it stable; change it to start a fresh baseline.
+  stateKey: github-new-pages
+  # Optional regex: only alert on matching URLs, e.g. "/(blog|products|pricing)/"
+  # urlPattern: "/blog/"
+  maxUrlsPerSite: 200          # cost cap: max NEW URLs reported per site per run (extra ones come next run)
+  maxScannedUrlsPerSite: 200000  # reading is free; keep it above the site's size so no new page is missed
+  emitOnBaseline: false        # first run: silently remember all current URLs (no per-URL cost)
+  normalizeUrls: true          # http/https, www., trailing slash and utm_* changes don't count as new pages
+
+alert:
+  title: New pages on watched sites
+  max_items_in_message: 30
+  max_charge_usd: 0.25         # hard cap per run, enforced by Apify
+  send_when_empty: false
